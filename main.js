@@ -27,14 +27,9 @@ function main() {
   pixelate(ctx)
 
   points.push(
-    new Point(
-      vec(50, 50),
-      1,
-      vec(0, 0),
-      0.5
-    )
+    new Point({pos: vec(0, 0), m: 1, v: vec(0, 0), elasticity: 0.6, friction: 0.1})
   )
-  gravity = vec(0.01, 0.1)
+  gravity = vec(0.01, 0.2)
 
   window.requestAnimationFrame(loop)
 }
@@ -112,6 +107,15 @@ class Vec2 {
     return new Vec2(this.x, this.y)
   }
 
+  get magnitude() {
+    return Math.sqrt(this.dot(this))
+  }
+
+  // rotate 90 degrees clockwise
+  get right() {
+    return new Vec2(this.y, -this.x)
+  }
+
   unwrap(other, requireVec=false) {
     if (other instanceof Vec2) {
       return [other.x, other.y]
@@ -138,8 +142,8 @@ class Collision {
 }
 
 class Point {
-  constructor(pos, m, v, elasticity) {
-    [this.pos, this.m, this.v, this.elasticity] = [pos, m, v, elasticity]
+  constructor({pos, m, v, elasticity, friction}) {
+    [this.pos, this.m, this.v, this.elasticity, this.friction] = [pos, m, v, elasticity, friction]
   }
   
   get x() {
@@ -174,7 +178,12 @@ class Point {
     // the dot product sign is negative, since the normal vector is facing the opposite 
     // way we want to go (consider the projection)
     const normalVelocity = collision.normal.mult(collision.normal.dot(this.v)).neg
-    this.v = normalVelocity.mult(this.elasticity)
+
+    // get tangent by subtracting out velocity in normal direction
+    const tangentVelocity = this.v.sub(normalVelocity)
+
+    // TODO: fix friction so it can come to a complete stop even with constant "wind" force
+    this.v = normalVelocity.mult(this.elasticity).add(tangentVelocity.mult(this.friction))
   }
 
   update(force, dt) {
@@ -184,7 +193,7 @@ class Point {
   }
 
   updateVelocity(force, dt) {
-    this.v = this.v.add(force.mult(dt))
+    this.v = this.v.add(force.div(this.m).mult(dt))
   }
 
   updatePosition() {
