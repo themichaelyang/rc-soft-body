@@ -4,8 +4,11 @@
 let points = []
 let gravity
 let ctx
-let width = 100
-let height = 100
+
+const world = {
+  width: 100,
+  height: 100
+}
 
 function main() {
   const canvas = document.getElementById("canvas")
@@ -14,8 +17,8 @@ function main() {
   ctx.fillRect(0, 0, canvas.width, canvas.height)
   // const ratio = window.devicePixelRatio || 1
 
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = world.width;
+  canvas.height = world.height;
 
   // display width and height is different
   canvas.style.width = '500px'
@@ -31,7 +34,7 @@ function main() {
       0.5
     )
   )
-  gravity = vec(0, 0.1)
+  gravity = vec(0.01, 0.1)
 
   window.requestAnimationFrame(loop)
 }
@@ -54,10 +57,10 @@ function loop() {
 
   // TODO: Add mouse dragging for velocity and acceleration
   points.forEach((pt) => {
-    const collision = pt.collideWithFloor()
+    const collisions = pt.collisionsWithBorders(world.width, world.height)
 
-    if (collision) {
-      pt.handleCollision(collision)
+    if (collisions.length > 0) {
+      pt.collide(collisions)
     }
 
     pt.update(gravity, 0.1)
@@ -99,6 +102,10 @@ class Vec2 {
 
   get neg() {
     return new Vec2(-this.x, -this.y)
+  }
+
+  get abs() {
+    return new Vec2(Math.abs(this.x), Math.abs(this.y))
   }
 
   get dup() {
@@ -143,10 +150,20 @@ class Point {
     return this.pos.y
   }
 
-  collideWithFloor() {
-    if (this.y > 100) {
-      return new Collision(new Vec2(0, -1), this.y - 100)
-    }
+  collisionsWithBorders(width, height) {
+    const collisions = []
+
+    if (this.y > height) { collisions.push(new Collision(new Vec2(0, -1), this.y - height)) }
+    else if (this.y < 0) { collisions.push(new Collision(new Vec2(0, 1), -this.y)) }
+
+    if (this.x > width) { collisions.push(new Collision(new Vec2(-1, 0), this.x - width)) }
+    else if (this.x < 0) { collisions.push(new Collision(new Vec2(1, 0), -this.x)) }
+
+    return collisions
+  }
+
+  collide(collisions) {
+    collisions.forEach((c) => this.handleCollision(c))
   }
 
   // TODO: https://lisyarus.github.io/blog/posts/soft-body-physics.html#section-collision-resolution
