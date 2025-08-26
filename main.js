@@ -27,9 +27,9 @@ function main() {
   pixelate(ctx)
 
   points.push(
-    new Point({pos: vec(0, 0), m: 1, v: vec(0, 0), elasticity: 0.6, friction: 0.1})
+    new Point({pos: vec(0, 0), m: 1, v: vec(0.2, 0), elasticity: 0.6, friction: 0.1})
   )
-  gravity = vec(0.01, 0.2)
+  gravity = vec(0, 0.2)
 
   window.requestAnimationFrame(loop)
 }
@@ -183,7 +183,7 @@ class Point {
     const tangentVelocity = this.v.sub(normalVelocity)
 
     // TODO: fix friction so it can come to a complete stop even with constant "wind" force
-    this.v = normalVelocity.mult(this.elasticity).add(tangentVelocity.mult(this.friction))
+    this.v = normalVelocity.mult(this.elasticity).add(tangentVelocity.mult(1 - this.friction))
   }
 
   update(force, dt) {
