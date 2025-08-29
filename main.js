@@ -2,6 +2,8 @@
 
 
 let points = []
+let springs = []
+
 let gravity
 let ctx
 
@@ -25,10 +27,15 @@ function main() {
   canvas.style.height = '500px'
 
   pixelate(ctx)
+  // const p1 = new Point({pos: vec(1, 50), m: 1, v: vec(0.5, -2), elasticity: 0.6, friction: 0.1})
+  // const p2 = new Point({pos: vec(25, 0), m: 1, v: vec(0.2, 0), elasticity: 0.8, friction: 0.1})
+  const p1 = new Point({pos: vec(50, 50), m: 1, v: vec(0, 0), elasticity: 0.6, friction: 0.1})
+  const p2 = new Point({pos: vec(25, 25), m: 1, v: vec(0, 0.1), elasticity: 0.8, friction: 0.1})
+  const spring = new Spring({pointA: p1, pointB: p2, equilibriumLength: 25, stiffness: 0.001})
 
-  points.push(
-    new Point({pos: vec(0, 0), m: 1, v: vec(0.2, 0), elasticity: 0.6, friction: 0.1})
-  )
+  points.push(p1, p2)
+  springs.push(spring)
+
   gravity = vec(0, 0.2)
 
   window.requestAnimationFrame(loop)
@@ -51,6 +58,7 @@ function loop() {
   // https://gameprogrammingpatterns.com/game-loop.html
 
   // TODO: Add mouse dragging for velocity and acceleration
+  
   points.forEach((pt) => {
     const collisions = pt.collisionsWithBorders(world.width, world.height)
 
@@ -60,6 +68,12 @@ function loop() {
 
     pt.update(gravity, 0.1)
     pt.draw(ctx)
+  })
+
+  springs.forEach((spr) => {
+    spr.pointA.updateVelocity(spr.forceA, 0.1)
+    spr.pointB.updateVelocity(spr.forceB, 0.1)
+    spr.draw(ctx)
   })
 
   window.requestAnimationFrame(loop)
@@ -107,6 +121,7 @@ class Vec2 {
     return new Vec2(this.x, this.y)
   }
 
+  // TODO: could memoize
   get magnitude() {
     return Math.sqrt(this.dot(this))
   }
@@ -114,6 +129,10 @@ class Vec2 {
   // rotate 90 degrees clockwise
   get right() {
     return new Vec2(this.y, -this.x)
+  }
+
+  get unit() {
+    return this.div(this.magnitude)
   }
 
   unwrap(other, requireVec=false) {
@@ -208,6 +227,47 @@ class Point {
 }
 
 class Spring {
-  // F = -k(|x|-d)(x/|x|) - bv
-  // constructor(posA, posB, damping, )
+  constructor({pointA, pointB, equilibriumLength, stiffness}) {
+    [this.pointA, this.pointB, this.equilibriumLength, this.stiffness] = [pointA, pointB, equilibriumLength, stiffness]
+  }
+
+  // force acting on point A
+  get forceA() {
+    return this.force(this.pointA.pos, this.pointB.pos)
+  }
+
+  get forceB() {
+    return this.force(this.pointB.pos, this.pointA.pos)
+  }
+
+  force(origin, dest) {
+    const delta = dest.sub(origin)
+    const displacement = this.equilibriumLength - delta.magnitude
+    const direction = delta.unit
+
+    return direction.mult(this.stiffness * displacement)
+  }
+
+  get ax() {
+    return this.pointA.x
+  }
+
+  get ay() {
+    return this.pointA.y
+  }
+
+  get bx() {
+    return this.pointB.x
+  }
+
+  get by() {
+    return this.pointB.y
+  }
+
+  draw(ctx) {
+    ctx.beginPath()
+    ctx.moveTo(this.ax, this.ay)
+    ctx.lineTo(this.bx, this.by)
+    ctx.stroke()
+  }
 }
