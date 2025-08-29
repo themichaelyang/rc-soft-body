@@ -91,7 +91,7 @@ class Vec2 {
 
   sub(other) {
     const [dx, dy] = this.unwrap(other)
-    return new Vec2(this.x + dx, this.y + dy)
+    return new Vec2(this.x - dx, this.y - dy)
   }
 
   mult(other) {
