@@ -1,6 +1,3 @@
-"use strict"
-
-
 let points = []
 let springs = []
 
@@ -265,9 +262,23 @@ class Spring {
   }
 
   draw(ctx) {
+    console.log([this.pointA.x, this.pointA.y])
     ctx.beginPath()
     ctx.moveTo(this.ax, this.ay)
     ctx.lineTo(this.bx, this.by)
     ctx.stroke()
+    const vecA = this.forceA
+    ctx.beginPath()
+    ctx.strokeStyle = "blue"
+    ctx.moveTo(this.ax, this.ay)
+    ctx.lineTo(this.ax + vecA.x, this.ay + vecA.y)
+    ctx.stroke()
+
+    const vecB = this.forceB
+    ctx.beginPath()
+    ctx.moveTo(this.bx, this.by)
+    ctx.lineTo(this.bx + vecB.x, this.by + vecB.y)
+    ctx.stroke()
+    ctx.strokeStyle = "black"
   }
 }
