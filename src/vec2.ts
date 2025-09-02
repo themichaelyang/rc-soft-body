@@ -28,6 +28,10 @@ export class Vec2 {
     return (this.x * dx) + (this.y * dy)
   }
 
+  distance(other: Vec2) {
+    return this.sub(other).magnitude
+  }
+
   get neg() {
     return new Vec2(-this.x, -this.y)
   }

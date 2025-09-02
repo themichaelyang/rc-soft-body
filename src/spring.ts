@@ -10,7 +10,11 @@ export class Spring {
   stiffness: number
 
   constructor({pointA, pointB, equilibriumLength, stiffness}) {
-    [this.pointA, this.pointB, this.equilibriumLength, this.stiffness] = [pointA, pointB, equilibriumLength, stiffness]
+    [this.pointA, this.pointB, this.stiffness] = [pointA, pointB, stiffness]
+
+    if (equilibriumLength === null) {
+      this.equilibriumLength = this.pointA.pos.distance(this.pointB.pos)
+    }
   }
 
   // force acting on point A
@@ -52,17 +56,17 @@ export class Spring {
   }
 
   draw(ctx: CanvasContext) {
-    console.log([this.pointA.x, this.pointA.y])
+    // console.log([this.pointA.x, this.pointA.y])
     ctx.beginPath()
     ctx.moveTo(this.ax, this.ay)
     ctx.lineTo(this.bx, this.by)
     ctx.stroke()
-    const vecA = this.forceA
-    ctx.beginPath()
-    ctx.strokeStyle = "blue"
-    ctx.moveTo(this.ax, this.ay)
-    ctx.lineTo(this.ax + vecA.x, this.ay + vecA.y)
-    ctx.stroke()
+    // const vecA = this.forceA
+    // ctx.beginPath()
+    // ctx.strokeStyle = "blue"
+    // ctx.moveTo(this.ax, this.ay)
+    // ctx.lineTo(this.ax + vecA.x, this.ay + vecA.y)
+    // ctx.stroke()
 
     const vecB = this.forceB
     ctx.beginPath()

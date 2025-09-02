@@ -2,6 +2,7 @@ import { vec, Vec2 } from './vec2'
 import { PointMass } from './point_mass'
 import { Spring } from './spring'
 
+// TODO: get rid of these globals!
 let points: PointMass[] = []
 let springs: Spring[] = []
 
@@ -16,6 +17,26 @@ const world = {
 
 function random(n) {
   return Math.floor(Math.random() * n)
+}
+
+function makeSpringyRectangle(topLeft: Vec2, v: Vec2, width, height, cornerMass, elasticity, friction, stiffness): [PointMass[], Spring[]] {
+  let corners: PointMass[] = [
+    new PointMass({pos: topLeft, m: cornerMass, elasticity, friction, v}),
+    new PointMass({pos: topLeft.add(vec(width, 0)), m: cornerMass, elasticity, friction, v}),
+    new PointMass({pos: topLeft.add(vec(0, height)), m: cornerMass, elasticity, friction, v}),
+    new PointMass({pos: topLeft.add(vec(width, height)), m: cornerMass, elasticity, friction, v})
+  ]
+
+  let springs: Spring[] = []
+  for (let i = 0; i < corners.length; i++) {
+    for (let j = i+1; j < corners.length; j++) {
+      springs.push(
+        new Spring({ pointA: corners[i], pointB: corners[j], equilibriumLength: null, stiffness})
+      )
+    }
+  }
+
+  return [corners, springs]
 }
 
 function main() {
@@ -45,12 +66,16 @@ function main() {
   // }
   // const p1 = new PointMass({pos: vec(1, 50), m: 1, v: vec(0.1, -2), elasticity: 0.6, friction: 0.01})
   // const p2 = new PointMass({pos: vec(25, 0), m: 1, v: vec(0.2, 0), elasticity: 0.8, friction: 0.1})
-  const p1 = new PointMass({pos: vec(50, 50), m: 1, v: vec(0, 0), elasticity: 0.6, friction: 0.1})
-  const p2 = new PointMass({pos: vec(25, 25), m: 1, v: vec(0, 0.1), elasticity: 0.8, friction: 0.1})
-  const spring = new Spring({pointA: p1, pointB: p2, equilibriumLength: 25, stiffness: 0.1})
+  // const p1 = new PointMass({pos: vec(50, 50), m: 1, v: vec(0, 0), elasticity: 0.6, friction: 0.1})
+  // const p2 = new PointMass({pos: vec(25, 25), m: 1, v: vec(0, 0.1), elasticity: 0.8, friction: 0.1})
+  // const spring = new Spring({pointA: p1, pointB: p2, equilibriumLength: 25, stiffness: 0.5})
 
-  points.push(p1, p2)
-  springs.push(spring)
+  // points.push(p1, p2)
+  // springs.push(spring)
+
+  // let rect = makeSpringyRectangle(vec(50, 50), 10, 10, 1, 0.5, 0.1, 0.5)
+  // ;[points, springs] = makeSpringyRectangle(vec(0, 20), vec(0.5, -0.5), 10, 10, 1, 0.8, 0.1, 1)
+  ;[points, springs] = makeSpringyRectangle(vec(10, 30), vec(-1, -1), 10, 10, 1, 0.8, 0.1, 1)
 
   gravity = vec(0, 0.2)
 
@@ -73,14 +98,13 @@ function loop() {
   // TODO: Use relative time elapsed (current time is passed into loop() by requestAnimationFrame
   // https://gameprogrammingpatterns.com/game-loop.html
 
-  // TODO: Add mouse dragging for velocity and acceleration
-  
+  // TODO: make springs and points share an interface for draw and update!
   springs.forEach((spr) => {
     spr.pointA.updateVelocity(spr.forceA, 0.1)
-    spr.pointB.updateVelocity(spr .forceB, 0.1)
-    spr.draw(ctx)
+    spr.pointB.updateVelocity(spr.forceB, 0.1)
   })
 
+  // TODO: Add mouse dragging for velocity and acceleration
   points.forEach((pt) => {
     const collisions = pt.collisionsWithBorders(world.width, world.height)
 
@@ -90,6 +114,10 @@ function loop() {
 
     pt.update(gravity, 0.1)
     pt.draw(ctx)
+  })
+
+  springs.forEach((spr) => {
+    spr.draw(ctx)
   })
 
   window.requestAnimationFrame(loop)

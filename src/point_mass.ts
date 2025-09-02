@@ -10,6 +10,10 @@ export class PointMass {
 
   constructor({pos, m, v, elasticity, friction}) {
     [this.pos, this.m, this.v, this.elasticity, this.friction] = [pos, m, v, elasticity, friction]
+
+    if (this.v === null) {
+      this.v = vec(0, 0)
+    }
   }
   
   get x() {
