@@ -1,11 +1,11 @@
-import { Point } from './point'
-import { Vec2 } from './vec2'
+import { PointMass } from './PointMass'
+import { Vec2 } from './Vec2'
 
 type CanvasContext = CanvasRenderingContext2D
 
 export class Spring {
-  pointA: Point
-  pointB: Point
+  pointA: PointMass
+  pointB: PointMass
   equilibriumLength: number
   stiffness: number
 

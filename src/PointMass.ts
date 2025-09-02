@@ -1,9 +1,9 @@
-import { vec, Vec2 } from './vec2'
-import { Collision } from './collision'
+import { vec, Vec2 } from './Vec2'
+import { Collision } from './Collision'
 
 type CanvasContext = CanvasRenderingContext2D
 
-export class Point {
+export class PointMass {
   pos: Vec2
   m: number
   v: Vec2 

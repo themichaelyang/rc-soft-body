@@ -1,8 +1,8 @@
-import { vec, Vec2 } from './vec2'
-import { Point } from './point'
-import { Spring } from './spring'
+import { vec, Vec2 } from './Vec2'
+import { PointMass } from './PointMass'
+import { Spring } from './Spring'
 
-let points: Point[] = []
+let points: PointMass[] = []
 let springs: Spring[] = []
 
 let canvas: HTMLCanvasElement
@@ -33,8 +33,8 @@ function main() {
   pixelate(ctx)
   // const p1 = new Point({pos: vec(1, 50), m: 1, v: vec(0.5, -2), elasticity: 0.6, friction: 0.1})
   // const p2 = new Point({pos: vec(25, 0), m: 1, v: vec(0.2, 0), elasticity: 0.8, friction: 0.1})
-  const p1 = new Point({pos: vec(50, 50), m: 1, v: vec(0, 0), elasticity: 0.6, friction: 0.1})
-  const p2 = new Point({pos: vec(25, 25), m: 1, v: vec(0, 0.1), elasticity: 0.8, friction: 0.1})
+  const p1 = new PointMass({pos: vec(50, 50), m: 1, v: vec(0, 0), elasticity: 0.6, friction: 0.1})
+  const p2 = new PointMass({pos: vec(25, 25), m: 1, v: vec(0, 0.1), elasticity: 0.8, friction: 0.1})
   const spring = new Spring({pointA: p1, pointB: p2, equilibriumLength: 25, stiffness: 0.001})
 
   points.push(p1, p2)
