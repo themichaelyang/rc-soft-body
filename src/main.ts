@@ -1,6 +1,6 @@
-import { vec, Vec2 } from './Vec2'
-import { PointMass } from './PointMass'
-import { Spring } from './Spring'
+import { vec, Vec2 } from './vec2'
+import { PointMass } from './point_mass'
+import { Spring } from './spring'
 
 let points: PointMass[] = []
 let springs: Spring[] = []
@@ -34,23 +34,23 @@ function main() {
 
   pixelate(ctx)
 
-  for (let i = 0; i < 10; i++) {
-    points.push(new PointMass({
-      pos: vec(random(world.width / 2), random(world.height / 2)),
-      v: vec(random(3), random(3)),
-      m: 1, 
-      elasticity: random(5) / 5 + 0.2, 
-      friction: random(10) / 50
-    }))
-  }
+  // for (let i = 0; i < 10; i++) {
+  //   points.push(new PointMass({
+  //     pos: vec(random(world.width / 2), random(world.height / 2)),
+  //     v: vec(random(3), random(3)),
+  //     m: 1, 
+  //     elasticity: random(5) / 5 + 0.2, 
+  //     friction: random(10) / 50
+  //   }))
+  // }
   // const p1 = new PointMass({pos: vec(1, 50), m: 1, v: vec(0.1, -2), elasticity: 0.6, friction: 0.01})
   // const p2 = new PointMass({pos: vec(25, 0), m: 1, v: vec(0.2, 0), elasticity: 0.8, friction: 0.1})
-  // const p1 = new PointMass({pos: vec(50, 50), m: 1, v: vec(0, 0), elasticity: 0.6, friction: 0.1})
-  // const p2 = new PointMass({pos: vec(25, 25), m: 1, v: vec(0, 0.1), elasticity: 0.8, friction: 0.1})
-  // const spring = new Spring({pointA: p1, pointB: p2, equilibriumLength: 25, stiffness: 0.001})
+  const p1 = new PointMass({pos: vec(50, 50), m: 1, v: vec(0, 0), elasticity: 0.6, friction: 0.1})
+  const p2 = new PointMass({pos: vec(25, 25), m: 1, v: vec(0, 0.1), elasticity: 0.8, friction: 0.1})
+  const spring = new Spring({pointA: p1, pointB: p2, equilibriumLength: 25, stiffness: 0.1})
 
-  // points.push(p1)
-  // springs.push(spring)
+  points.push(p1, p2)
+  springs.push(spring)
 
   gravity = vec(0, 0.2)
 
@@ -75,6 +75,12 @@ function loop() {
 
   // TODO: Add mouse dragging for velocity and acceleration
   
+  springs.forEach((spr) => {
+    spr.pointA.updateVelocity(spr.forceA, 0.1)
+    spr.pointB.updateVelocity(spr .forceB, 0.1)
+    spr.draw(ctx)
+  })
+
   points.forEach((pt) => {
     const collisions = pt.collisionsWithBorders(world.width, world.height)
 
@@ -85,12 +91,6 @@ function loop() {
     pt.update(gravity, 0.1)
     pt.draw(ctx)
   })
-
-  // springs.forEach((spr) => {
-  //   spr.pointA.updateVelocity(spr.forceA, 0.1)
-  //   spr.pointB.updateVelocity(spr.forceB, 0.1)
-  //   spr.draw(ctx)
-  // })
 
   window.requestAnimationFrame(loop)
 }

@@ -1,5 +1,5 @@
-import { PointMass } from './PointMass'
-import { Vec2 } from './Vec2'
+import { PointMass } from './point_mass'
+import { Vec2 } from './vec2'
 
 type CanvasContext = CanvasRenderingContext2D
 
@@ -22,10 +22,14 @@ export class Spring {
     return this.force(this.pointB.pos, this.pointA.pos)
   }
 
-  // TODO: something is wrong with the spring calculations...
-  force(origin: Vec2, dest: Vec2) {
-    const delta = dest.sub(origin) 
-    const displacement = this.equilibriumLength - delta.magnitude
+  force(subject: Vec2, other: Vec2) {
+    // if subject is A...
+    // B - A = vector from A -> B
+    const delta = other.sub(subject) 
+
+    // We want spring force magnitude to be positive (acting in direction of A -> B) when delta.magnitude > equilibrium length
+    // otherwise, negative if spring is compressed to repel A and B
+    const displacement = delta.magnitude - this.equilibriumLength
     const direction = delta.unit
 
     return direction.mult(this.stiffness * displacement)

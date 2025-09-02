@@ -1,5 +1,5 @@
-import { vec, Vec2 } from './Vec2'
-import { Collision } from './Collision'
+import { vec, Vec2 } from './vec2'
+import { Collision } from './collision'
 
 export class PointMass {
   pos: Vec2
@@ -44,9 +44,9 @@ export class PointMass {
     // normal collision vector is in "opposite" direction of velocity
     const normalVelocity = collision.normal.mult(-collision.normal.dot(this.v))
 
-    console.log(`v: ${this.v}`)
-    console.log(`collision normal: ${collision.normal}`)
-    console.log(`normal: ${normalVelocity}`)
+    // console.log(`v: ${this.v}`)
+    // console.log(`collision normal: ${collision.normal}`)
+    // console.log(`normal: ${normalVelocity}`)
 
     // Get tangent by removing original velocity in normal direction. Add, because the normalVelocity
     // is "opposite" direction of the original velocity.
