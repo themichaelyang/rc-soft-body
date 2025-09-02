@@ -67,6 +67,10 @@ export class Vec2 {
       }
     }
   }
+
+  toString() {
+    return `(${this.x.toFixed(4)}, ${this.y.toFixed(4)})`
+  }
 }
 
 export function vec(...params: number[]) {

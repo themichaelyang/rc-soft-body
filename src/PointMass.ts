@@ -1,8 +1,6 @@
 import { vec, Vec2 } from './Vec2'
 import { Collision } from './Collision'
 
-type CanvasContext = CanvasRenderingContext2D
-
 export class PointMass {
   pos: Vec2
   m: number
@@ -45,13 +43,20 @@ export class PointMass {
   
     // the dot product sign is negative, since the normal vector is facing the opposite 
     // way we want to go (consider the projection)
-    const normalVelocity = collision.normal.mult(collision.normal.dot(this.v)).neg
+    const normalVelocity = collision.normal.mult(collision.normal.dot(this.v))
+
+    console.log(`v: ${this.v}`)
+    console.log(`collision normal: ${collision.normal}`)
+    console.log(`normal: ${normalVelocity}`)
 
     // get tangent by subtracting out velocity in normal direction
     const tangentVelocity = this.v.sub(normalVelocity)
 
+    // this.v = normalVelocity.add(tangentVelocity)
+
     // TODO: fix friction so it can come to a complete stop even with constant "wind" force
-    this.v = normalVelocity.mult(this.elasticity).add(tangentVelocity.mult(1 - this.friction))
+    // this.v = normalVelocity.mult(this.elasticity).add(tangentVelocity.mult(1 - this.friction))).
+    this.v = tangentVelocity.add(normalVelocity.mult(-this.elasticity))
   }
 
   update(force: Vec2, dt: number) {
@@ -68,7 +73,7 @@ export class PointMass {
     this.pos = this.pos.add(this.v)
   }
 
-  draw(ctx: CanvasContext) {
+  draw(ctx: CanvasRenderingContext2D) {
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.m, 0, 2 * Math.PI)
     ctx.stroke()
