@@ -40,23 +40,19 @@ export class PointMass {
   handleCollision(collision: Collision) {
     // uncollide
     this.pos = this.pos.add(collision.normal.mult(collision.depth))
-  
-    // the dot product sign is negative, since the normal vector is facing the opposite 
-    // way we want to go (consider the projection)
-    const normalVelocity = collision.normal.mult(collision.normal.dot(this.v))
+ 
+    // normal collision vector is in "opposite" direction of velocity
+    const normalVelocity = collision.normal.mult(-collision.normal.dot(this.v))
 
     console.log(`v: ${this.v}`)
     console.log(`collision normal: ${collision.normal}`)
     console.log(`normal: ${normalVelocity}`)
 
-    // get tangent by subtracting out velocity in normal direction
-    const tangentVelocity = this.v.sub(normalVelocity)
+    // Get tangent by removing original velocity in normal direction. Add, because the normalVelocity
+    // is "opposite" direction of the original velocity.
+    const tangentVelocity = this.v.add(normalVelocity)
 
-    // this.v = normalVelocity.add(tangentVelocity)
-
-    // TODO: fix friction so it can come to a complete stop even with constant "wind" force
-    // this.v = normalVelocity.mult(this.elasticity).add(tangentVelocity.mult(1 - this.friction))).
-    this.v = tangentVelocity.add(normalVelocity.mult(-this.elasticity))
+    this.v = normalVelocity.mult(this.elasticity).add(tangentVelocity.mult(1 - this.friction))
   }
 
   update(force: Vec2, dt: number) {
