@@ -3,24 +3,32 @@ type VecOrNum = Vec2 | number
 export class Vec2 {
   constructor(public x: number, public y: number) {}
 
+  assign(other: Vec2) {
+    Object.assign(this, other)
+  }
+
+  static create(x: number, y: number) {
+    return new Vec2(x, y) 
+  }
+
   add(other: Vec2) {
     const [dx, dy] = this.unwrap(other)
-    return new Vec2(this.x + dx, this.y + dy)
+    return Vec2.create(this.x + dx, this.y + dy)
   }
 
   sub(other: VecOrNum) {
     const [dx, dy] = this.unwrap(other)
-    return new Vec2(this.x - dx, this.y - dy)
+    return Vec2.create(this.x - dx, this.y - dy)
   }
 
   mult(other: VecOrNum) {
     const [dx, dy] = this.unwrap(other)
-    return new Vec2(this.x * dx, this.y * dy)
+    return Vec2.create(this.x * dx, this.y * dy)
   }
 
   div(other: VecOrNum) {
     const [dx, dy] = this.unwrap(other)
-    return new Vec2(this.x / dx, this.y / dy)
+    return Vec2.create(this.x / dx, this.y / dy)
   }
 
   dot(other: Vec2) {
@@ -33,15 +41,15 @@ export class Vec2 {
   }
 
   get neg() {
-    return new Vec2(-this.x, -this.y)
+    return Vec2.create(-this.x, -this.y)
   }
 
   get abs() {
-    return new Vec2(Math.abs(this.x), Math.abs(this.y))
+    return Vec2.create(Math.abs(this.x), Math.abs(this.y))
   }
 
   get dup() {
-    return new Vec2(this.x, this.y)
+    return Vec2.create(this.x, this.y)
   }
 
   get magnitude() {
@@ -51,7 +59,7 @@ export class Vec2 {
 
   // rotate 90 degrees clockwise
   get right() {
-    return new Vec2(this.y, -this.x)
+    return Vec2.create(this.y, -this.x)
   }
 
   get unit() {
@@ -79,7 +87,7 @@ export class Vec2 {
 
 export function vec(...params: number[]) {
   if (params.length == 2) {
-    return new Vec2(params[0], params[1])
+    return Vec2.create(params[0], params[1])
   }
   else {
     throw new Error(`Invalid number of parameters! Received: ${params.length} parameters`)

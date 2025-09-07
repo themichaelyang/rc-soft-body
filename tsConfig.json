@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
-    "alwaysStrict": true
+    "alwaysStrict": true,
+    "lib": ["es2015"]
   }
 }
