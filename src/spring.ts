@@ -19,10 +19,12 @@ export class Spring {
 
   // force acting on point A
   get forceA() {
+    // return new Vec2(0, 0)
     return this.force(this.pointA.pos, this.pointB.pos)
   }
 
   get forceB() {
+    // return new Vec2(0, 0)
     return this.force(this.pointB.pos, this.pointA.pos)
   }
 

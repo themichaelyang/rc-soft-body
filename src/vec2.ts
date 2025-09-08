@@ -1,7 +1,42 @@
 type VecOrNum = Vec2 | number
 
+// TODO: make this generic
 class Pool {
-  
+  objects: Vec2[]
+  numAllocated: number
+
+  constructor(size: number) {
+    this.numAllocated = 0
+    this.objects = []
+    for (let i = 0; i < size; i++) {
+      this.objects.push(new Vec2(0, 0))
+    }
+  }
+
+  get(x, y) {
+    let nextObject;
+
+    if (this.numAllocated >= this.objects.length) {
+      console.log(`Pooling up! ${this.objects.length}`)
+      nextObject = new Vec2(x, y)
+      this.objects.push(nextObject)
+    }
+    else {
+      nextObject = this.objects[this.numAllocated]
+      nextObject.x = x
+      nextObject.y = y
+    }
+
+    this.numAllocated += 1
+    return nextObject 
+  }
+
+  // TODO: maybe add way to free with more granularity (after a set of ops instead of the entire loop)
+  // even automagically?
+  free() {
+    // console.log(this.objects)
+    this.numAllocated = 0
+  }
 }
 
 export class Vec2 {
@@ -9,12 +44,17 @@ export class Vec2 {
 
   constructor(public x: number, public y: number) {}
 
+  // TODO: make pool copy references out more naturally
   assign(other: Vec2) {
     Object.assign(this, other)
   }
 
   static create(x: number, y: number) {
-    return new Vec2(x, y)
+    if (!this.pool) {
+      this.pool = new Pool(291)
+      // this.pool = new Pool(1295449)
+    }
+    return this.pool.get(x, y)
   }
 
   add(other: Vec2) {

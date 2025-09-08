@@ -2,14 +2,14 @@ import { vec, Vec2 } from './vec2'
 import { Collision } from './collision'
 
 export class PointMass {
-  pos: Vec2
+  _pos: Vec2
   m: number
-  v: Vec2 
+  _v: Vec2 
   elasticity: number
   friction: number
 
   constructor({pos, m, v, elasticity, friction}) {
-    [this.pos, this.m, this.v, this.elasticity, this.friction] = [pos, m, v, elasticity, friction]
+    [this._pos, this.m, this._v, this.elasticity, this.friction] = [pos, m, v, elasticity, friction]
 
     if (this.v === null) {
       this.v = vec(0, 0)
@@ -24,14 +24,35 @@ export class PointMass {
     return this.pos.y
   }
 
+  get pos() {
+    return this._pos
+  }
+
+  set pos(newPos: Vec2) {
+    if (Vec2.pool.objects.indexOf(this._pos) != -1) {
+      debugger
+    }
+    
+
+    this._pos.assign(newPos)
+  }
+
+  get v() {
+    return this._v
+  }
+
+  set v(v2: Vec2) {
+    this._v.assign(v2)
+  }
+
   collisionsWithBorders(width: number, height: number) {
     const collisions = []
 
-    if (this.y > height) { collisions.push(new Collision(vec(0, -1), this.y - height)) }
-    else if (this.y < 0) { collisions.push(new Collision(vec(0, 1), -this.y)) }
+    if (this.y > height) { collisions.push(new Collision(Vec2.create(0, -1), this.y - height)) }
+    else if (this.y < 0) { collisions.push(new Collision(Vec2.create(0, 1), -this.y)) }
 
-    if (this.x > width) { collisions.push(new Collision(vec(-1, 0), this.x - width)) }
-    else if (this.x < 0) { collisions.push(new Collision(vec(1, 0), -this.x)) }
+    if (this.x > width) { collisions.push(new Collision(Vec2.create(-1, 0), this.x - width)) }
+    else if (this.x < 0) { collisions.push(new Collision(Vec2.create(1, 0), -this.x)) }
 
     return collisions
   }

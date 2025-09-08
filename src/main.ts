@@ -70,9 +70,11 @@ function main() {
   //   }))
   // }
 
-
   // const p1 = new PointMass({pos: vec(1, 50), m: 1, v: vec(0.1, -2), elasticity: 0.6, friction: 0.01})
   // const p2 = new PointMass({pos: vec(25, 0), m: 1, v: vec(0.2, 0), elasticity: 0.8, friction: 0.1})
+
+  // const p1 = new PointMass({pos: vec(1, 50), m: 1, v: vec(0.1, -2), elasticity: 1, friction: 0})
+  // const p2 = new PointMass({pos: vec(25, 0), m: 1, v: vec(0.2, 0), elasticity: 1, friction: 0})
 
   // const p1 = new PointMass({pos: vec(25, 25), m: 1, v: vec(0, -0.1), elasticity: 0.6, friction: 0.1})
   // const p2 = new PointMass({pos: vec(75, 25), m: 1, v: vec(0, 0.1), elasticity: 0.8, friction: 0.1})
@@ -82,12 +84,12 @@ function main() {
   // springs.push(spring)
 
   // let rect = makeSpringyRectangle(vec(50, 50), 10, 10, 1, 0.5, 0.1, 0.5)
-  addPointsAndSprings(makeSpringyRectangle(vec(10, 15), vec(0.5, -0.5), 10, 10, 1, 0.7, 0.1, 0.8))
+  // addPointsAndSprings(makeSpringyRectangle(vec(10, 15), vec(0.5, -0.5), 10, 10, 1, 0.7, 0.1, 0.8))
 
-  for (let i = 0; i < 10000; i++) {
-    addPointsAndSprings(makeSpringyRectangle(vec(random(50), random(50)), vec(random(10) / 10 + 0.1, random(10) / 10 + 0.1), 10, 10, 1, 0.7, 0.1, 0.8))
-  }
-  // ;[points, springs] = makeSpringyRectangle(vec(25, 30), vec(0, 0), 10, 10, 1, 0.8, 0.1, 0.5)
+  // for (let i = 0; i < 2; i++) {
+    // addPointsAndSprings(makeSpringyRectangle(vec(random(50), random(50)), vec(random(10) / 10 + 0.1, random(10) / 10 + 0.1), 10, 10, 1, 0.7, 0.1, 0.8))
+  // }
+  ;[points, springs] = makeSpringyRectangle(vec(50, 50), vec(0, 0), 10, 10, 1, 0.8, 0.1, 0.5)
 
   gravity = vec(0, 0.2)
 
@@ -136,5 +138,6 @@ function loop() {
     spr.draw(ctx)
   })
 
+  Vec2.pool.free()
   window.requestAnimationFrame(loop)
 }
