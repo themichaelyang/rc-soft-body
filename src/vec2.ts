@@ -1,6 +1,12 @@
 type VecOrNum = Vec2 | number
 
+class Pool {
+  
+}
+
 export class Vec2 {
+  static pool: Pool; 
+
   constructor(public x: number, public y: number) {}
 
   assign(other: Vec2) {
@@ -8,7 +14,7 @@ export class Vec2 {
   }
 
   static create(x: number, y: number) {
-    return new Vec2(x, y) 
+    return new Vec2(x, y)
   }
 
   add(other: Vec2) {
@@ -87,7 +93,7 @@ export class Vec2 {
 
 export function vec(...params: number[]) {
   if (params.length == 2) {
-    return Vec2.create(params[0], params[1])
+    return new Vec2(params[0], params[1])
   }
   else {
     throw new Error(`Invalid number of parameters! Received: ${params.length} parameters`)

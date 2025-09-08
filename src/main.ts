@@ -19,6 +19,11 @@ function random(n) {
   return Math.floor(Math.random() * n)
 }
 
+function addPointsAndSprings([morePoints, moreSprings]) {
+  points.push(...morePoints)
+  springs.push(...moreSprings)
+}
+
 function makeSpringyRectangle(topLeft: Vec2, v: Vec2, width, height, cornerMass, elasticity, friction, stiffness): [PointMass[], Spring[]] {
   let corners: PointMass[] = [
     new PointMass({pos: topLeft, m: cornerMass, elasticity, friction, v}),
@@ -77,10 +82,17 @@ function main() {
   // springs.push(spring)
 
   // let rect = makeSpringyRectangle(vec(50, 50), 10, 10, 1, 0.5, 0.1, 0.5)
-  ;[points, springs] = makeSpringyRectangle(vec(10, 15), vec(0.5, -0.5), 10, 10, 1, 0.7, 0.1, 0.8)
+  addPointsAndSprings(makeSpringyRectangle(vec(10, 15), vec(0.5, -0.5), 10, 10, 1, 0.7, 0.1, 0.8))
+
+  for (let i = 0; i < 10000; i++) {
+    addPointsAndSprings(makeSpringyRectangle(vec(random(50), random(50)), vec(random(10) / 10 + 0.1, random(10) / 10 + 0.1), 10, 10, 1, 0.7, 0.1, 0.8))
+  }
   // ;[points, springs] = makeSpringyRectangle(vec(25, 30), vec(0, 0), 10, 10, 1, 0.8, 0.1, 0.5)
 
   gravity = vec(0, 0.2)
+
+  // @ts-ignore
+  var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);
 
   window.requestAnimationFrame(loop)
 }
@@ -98,6 +110,7 @@ window.onload = () => {
 function loop() {
   ctx.fillStyle = "white"
   ctx.fillRect(0, 0, canvas.width, canvas.height)
+
   // TODO: Use relative time elapsed (current time is passed into loop() by requestAnimationFrame
   // https://gameprogrammingpatterns.com/game-loop.html
 
