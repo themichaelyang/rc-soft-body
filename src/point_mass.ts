@@ -30,10 +30,7 @@ export class PointMass {
   }
 
   set pos(newPos: Vec2) {
-    // if (Vec2.pool.objects.indexOf(this._pos) != -1) {
-    //   debugger
-    // }
-    
+    console.assert(Vec2.pool.objects.indexOf(this._pos) == -1, "Position should be outside of object pool!")
 
     this._pos.assign(newPos)
   }

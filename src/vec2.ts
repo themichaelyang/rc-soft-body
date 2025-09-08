@@ -31,16 +31,16 @@ class Pool {
     return nextObject 
   }
 
-  // TODO: maybe add way to free with more granularity (after a set of ops instead of the entire loop)
-  // even automagically?
-  free() {
-    // console.log(this.objects)
+  // TODO: maybe add way to recycle with more granularity (after a set of ops instead of the entire loop)
+  // even automagically? See: https://erikonarheim.com/posts/value-objects-in-javascript-object-pools/
+  recycle() {
     this.numAllocated = 0
   }
 }
 
 export class Vec2 {
   static pool: Pool; 
+  static usePool: boolean = true;
 
   constructor(public x: number, public y: number) {}
 
@@ -50,11 +50,10 @@ export class Vec2 {
   }
 
   static create(x: number, y: number) {
-    if (!this.pool) {
-      this.pool = new Pool(100)
-      // this.pool = new Pool(1295449)
-    }
-    return this.pool.get(x, y)
+    this.pool ||= new Pool(100)
+
+    if (this.usePool) { return this.pool.get(x, y) }
+    else { return new Vec2(x, y) }
   }
 
   add(other: Vec2) {
