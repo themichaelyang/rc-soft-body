@@ -93,9 +93,6 @@ function main() {
 
   gravity = vec(0, 0.2)
 
-  // @ts-ignore
-  var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);
-
   window.requestAnimationFrame(loop)
 }
 
