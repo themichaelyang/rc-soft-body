@@ -9,7 +9,8 @@ export class PointMass {
   friction: number
 
   constructor({pos, m, v, elasticity, friction}) {
-    [this._pos, this.m, this._v, this.elasticity, this.friction] = [pos, m, v, elasticity, friction]
+    // duplicate the pos and v to free it from the pool if created from vector calculations
+    [this._pos, this.m, this._v, this.elasticity, this.friction] = [pos.dup, m, v.dup, elasticity, friction]
 
     if (this.v === null) {
       this.v = vec(0, 0)

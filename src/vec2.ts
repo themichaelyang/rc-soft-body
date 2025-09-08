@@ -95,7 +95,8 @@ export class Vec2 {
   }
 
   get dup() {
-    return Vec2.create(this.x, this.y)
+    // always creates a new Vector, so you can free it from the pool
+    return new Vec2(this.x, this.y)
   }
 
   get magnitude() {
