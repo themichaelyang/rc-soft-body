@@ -51,7 +51,7 @@ export class Vec2 {
 
   static create(x: number, y: number) {
     if (!this.pool) {
-      this.pool = new Pool(291)
+      this.pool = new Pool(100)
       // this.pool = new Pool(1295449)
     }
     return this.pool.get(x, y)

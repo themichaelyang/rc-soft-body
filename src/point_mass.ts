@@ -30,9 +30,9 @@ export class PointMass {
   }
 
   set pos(newPos: Vec2) {
-    if (Vec2.pool.objects.indexOf(this._pos) != -1) {
-      debugger
-    }
+    // if (Vec2.pool.objects.indexOf(this._pos) != -1) {
+    //   debugger
+    // }
     
 
     this._pos.assign(newPos)
