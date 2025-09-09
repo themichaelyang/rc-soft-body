@@ -93,8 +93,9 @@ export class PointMass {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.beginPath()
+    // ctx.beginPath()
+    ctx.moveTo(this.x, this.y)
     ctx.arc(this.x, this.y, this.m, 0, 2 * Math.PI)
-    ctx.stroke()
+    // ctx.stroke()
   }
 }

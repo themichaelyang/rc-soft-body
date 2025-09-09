@@ -10,39 +10,47 @@ export class Vec2 {
 
   // TODO: make pool copy references out more naturally
   assign(other: Vec2) {
-    Object.assign(this, other)
+    this.x = other.x
+    this.y = other.y
+    // Object.assign(this, other)
   }
 
-  static create(x: number, y: number) {
-    this.pool ||= new Pool(100000)
+  static create(x: number, y: number): Vec2 {
+    this.pool ||= new Pool(10000)
 
     if (this.usePool) { return this.pool.get(x, y) }
     else { return new Vec2(x, y) }
   }
 
   add(other: Vec2) {
-    const [dx, dy] = this.unwrap(other)
-    return Vec2.create(this.x + dx, this.y + dy)
+    // const [dx, dy] = this.unwrap(other)
+    // return Vec2.create(this.x + dx, this.y + dy)
+    other = this.broadcast(other)
+    return Vec2.create(this.x + other.x, this.y + other.y)
   }
 
   sub(other: VecOrNum) {
-    const [dx, dy] = this.unwrap(other)
-    return Vec2.create(this.x - dx, this.y - dy)
+    // const [dx, dy] = this.unwrap(other)
+    // return Vec2.create(this.x - dx, this.y - dy)
+    other = this.broadcast(other)
+    return Vec2.create(this.x - other.x, this.y - other.y)
   }
 
   mult(other: VecOrNum) {
-    const [dx, dy] = this.unwrap(other)
-    return Vec2.create(this.x * dx, this.y * dy)
+    // const [dx, dy] = this.unwrap(other)
+    other = this.broadcast(other)
+    return Vec2.create(this.x * other.x, this.y * other.y)
   }
 
   div(other: VecOrNum) {
-    const [dx, dy] = this.unwrap(other)
-    return Vec2.create(this.x / dx, this.y / dy)
+    other = this.broadcast(other)
+    return Vec2.create(this.x / other.x, this.y / other.y)
   }
 
   dot(other: Vec2) {
-    const [dx, dy] = this.unwrap(other, true)
-    return (this.x * dx) + (this.y * dy)
+    other = this.broadcast(other)
+    // const [dx, dy] = this.unwrap(other, true)
+    return (this.x * other.x) + (this.y * other.y)
   }
 
   distance(other: Vec2) {
@@ -76,19 +84,31 @@ export class Vec2 {
     return this.div(this.magnitude)
   }
 
-  unwrap(other: VecOrNum, requireVec=false) {
-    if (other instanceof Vec2) {
-      return [other.x, other.y]
-    }
-    else {
+  broadcast(other: VecOrNum, requireVec=false) {
+    if (typeof(other) == "number") {
       if (requireVec) {
         throw TypeError("Must be a Vec2!")
+      } else {
+        return Vec2.create(other, other)
       }
-      else {
-        return [other, other]
-      }
+    } else {
+      return other
     }
   }
+
+  // unwrap(other: VecOrNum, requireVec=false) {
+  //   if (other instanceof Vec2) {
+  //     return [other.x, other.y]
+  //   }
+  //   else {
+  //     if (requireVec) {
+  //       throw TypeError("Must be a Vec2!")
+  //     }
+  //     else {
+  //       return [other, other]
+  //     }
+  //   }
+  // }
 
   toString() {
     return `(${this.x.toFixed(4)}, ${this.y.toFixed(4)})`

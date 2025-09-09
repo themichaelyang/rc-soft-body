@@ -59,10 +59,10 @@ export class Spring {
 
   draw(ctx: CanvasContext) {
     // console.log([this.pointA.x, this.pointA.y])
-    ctx.beginPath()
+    // ctx.beginPath()
     ctx.moveTo(this.ax, this.ay)
     ctx.lineTo(this.bx, this.by)
-    ctx.stroke()
+    // ctx.stroke()
     // const vecA = this.forceA
     // ctx.beginPath()
     // ctx.strokeStyle = "blue"
@@ -70,11 +70,11 @@ export class Spring {
     // ctx.lineTo(this.ax + vecA.x, this.ay + vecA.y)
     // ctx.stroke()
 
-    const vecB = this.forceB
-    ctx.beginPath()
-    ctx.moveTo(this.bx, this.by)
-    ctx.lineTo(this.bx + vecB.x, this.by + vecB.y)
-    ctx.stroke()
-    ctx.strokeStyle = "black"
+    // const vecB = this.forceB
+    // ctx.beginPath()
+    // ctx.moveTo(this.bx, this.by)
+    // ctx.lineTo(this.bx + vecB.x, this.by + vecB.y)
+    // ctx.stroke()
+    // ctx.strokeStyle = "black"
   }
 }

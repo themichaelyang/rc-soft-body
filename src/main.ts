@@ -119,6 +119,8 @@ function loop() {
     spr.pointB.updateVelocity(spr.forceB, 0.1)
   })
 
+  ctx.beginPath()
+  ctx.strokeStyle = "black"
   // TODO: Add mouse dragging for velocity and acceleration
   points.forEach((pt) => {
     const collisions = pt.collisionsWithBorders(world.width, world.height)
@@ -131,9 +133,13 @@ function loop() {
     pt.draw(ctx)
   })
 
+  ctx.strokeStyle = "black"
   springs.forEach((spr) => {
     spr.draw(ctx)
   })
+
+  // optimize by only calling stroke once
+  ctx.stroke()
 
   Vec2.pool.recycle()
   window.requestAnimationFrame(loop)
